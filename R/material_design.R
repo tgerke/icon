@@ -9,12 +9,12 @@ download_material_design <- function(version = "dev"){
     url <- glue("https://github.com/google/material-design-icons/archive/{version}.zip")
   }
 
-  meta <- jsonlite::read_json("https://raw.githubusercontent.com/google/material-design-icons/master/package.json")
-
   install_icon_zip(
     "material_design", url, svg_path = mdi_svg_paths,
     svg_pattern = "_48px\\.svg", svg_dest = mdi_svg_dest,
-    meta = list(name = "Material Design Icons", version = meta$version, licence = meta$license)
+    meta = list(name = "Material Design Icons",
+                version = gh::gh("GET /repos/{owner}/{repo}/releases/latest", owner="google", repo="material-design-icons")$tag_name,
+                licence = gh::gh("GET /repos/{owner}/{repo}", owner="google", repo="material-design-icons")$license$name)
   )
 
   invisible(material_design)
